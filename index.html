@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset="utf-8">
+	<title>Canvas Test</title>
+	<style>
+		canvas {
+			border: 1px dashed black;
+		}
+		.Selected {
+			background-color: yellow;
+		}
+	</style>
+	<script>
+		var canvas;
+		var context;
+		var previous_color_element;
+		var isDrawing = false;
+
+		function changeColor(color, imgElement){
+			//change the current drawing color
+			context.strokeStyle = color;
+
+			//give the newly click img a selected style
+			document.getElementById('redPen').className='';
+			document.getElementById('greenPen').className='';
+			document.getElementById('bluePen').className='';
+			imgElement.className="Selected";
+
+			//return the previously click img to its normal state
+			if(previous_color_element !=null) previous_color_element ="";
+			previous_color_element=imgElement;
+		}
+
+
+		function draw(e) {
+			if(isDrawing == true){
+				//Find the new position of the mouse.
+				var x = e.pageX - canvas.offsetLeft;
+				var y = e.pageY - canvas.offsetTop;
+
+				//Draw a line to the new position
+				context.lineTo(x,y);
+				context.stroke();
+			}
+		}
+		function startDrawing(e){
+			//start drawing
+			isDrawing=true;
+
+			//create a new path with the current stroke and thickness
+			context.beginPath();
+
+			//put the pen down at the mouse's position
+			context.moveTo(e.pageX-canvas.offsetLeft, e.pageY-canvas.offsetTop);
+		}
+		function stopDrawing(){
+			isDrawing=false;
+		}
+	</script>
+</head>
+<body>
+	<div class = "Toolbar">
+		- Pen Color - <br />
+		<img id="redPen" src="pen_red.gif" alt="Red Pen" onclick="changeColor('rgb(212,21,29)', this)">
+		<img id="greenPen" src="pen_green.gif" alt="Green Pen" onclick="changeColor('rgb(131,190,61)', this)">
+		<img id="bluePen" src="pen_blue.gif" alt="Blue Pen" onclick="changeColor('rgb(0,86,166)', this)">
+	</div>
+	<canvas id="drawingCanvas" width='500' height='300'></canvas>
+	<script>
+		window.onload = function(){
+			//Get the canvas and the drawing context.
+			canvas = document.getElementById("drawingCanvas");
+			context = canvas.getContext("2d");
+
+			//Attach the vents that you need for drawing
+			canvas.onmousedown = startDrawing;
+			canvas.onmouseup = stopDrawing;
+			canvas.onmouseout = stopDrawing;
+			canvas.onmousemove = draw;
+
+			
+			context.fillRect(10,10,3,1);
+			context.fillRect(9,11,5,1);
+			context.fillRect(8,12,7,3);
+			context.fillRect(9,15,5,1);
+			context.fillRect(10,16,3,1);
+
+		}
+	</script>
+</body>
+</html>

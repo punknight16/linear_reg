@@ -5,7 +5,7 @@ var serveStatic = require('serve-static');
 var app = express();
 app
 	.get('/', function(req, res){
-			res.end('hello world');
+			res.sendFile(path.join(__dirname+'/index.html'));
 	})
 	.use(serveStatic(__dirname + '/public'))
 	.use(error)
